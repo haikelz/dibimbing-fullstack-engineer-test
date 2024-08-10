@@ -1,12 +1,5 @@
-import {
-  Box,
-  Card,
-  Container,
-  Heading,
-  Input,
-  Text,
-  Textarea,
-} from "@chakra-ui/react";
+import { Box, Container, Heading, Text } from "@chakra-ui/react";
+import HomepageClient from "./client";
 
 export default function Homepage() {
   return (
@@ -24,17 +17,7 @@ export default function Homepage() {
             Solution
           </Text>
         </Box>
-        <Box width="100%" mt={6}>
-          <Input type="text" placeholder="Judul...." />
-          <Textarea mt={4} placeholder="Catatan...." />
-        </Box>
-        <Card width="100%" padding={3}>
-          <Text textAlign="right">2022-20-20</Text>
-          <Box mt={3}>
-            <Heading size="md">Title</Heading>
-            <Text mt={2}>Isi</Text>
-          </Box>
-        </Card>
+        <HomepageClient />
       </Container>
     </Box>
   );

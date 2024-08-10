@@ -6,9 +6,9 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
+RUN npm install
 
 COPY . ./
-RUN pnpm run build
+RUN npm run build
 
-CMD ["pnpm", "run", "dev"]
+CMD ["npm", "run", "dev"]
