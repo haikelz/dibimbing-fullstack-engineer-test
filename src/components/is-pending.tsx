@@ -1,9 +1,5 @@
-import { Stack, Text } from "@chakra-ui/react";
+import { Skeleton, Stack, Text } from "@chakra-ui/react";
 
 export default function IsPending() {
-  return (
-    <Stack>
-      <Text>Loading....</Text>
-    </Stack>
-  );
+  return <Skeleton minHeight="100svh" mt={6} width="100%"></Skeleton>;
 }
