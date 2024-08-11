@@ -39,7 +39,9 @@ export default async function DetailNotePage({
   return (
     <Stack>
       <Heading>{detailNote.title}</Heading>
-      <Text>{detailNote.body}</Text>
+      <Text whiteSpace="pre-line" textAlign="justify">
+        {detailNote.body}
+      </Text>
       <Stack></Stack>
     </Stack>
   );

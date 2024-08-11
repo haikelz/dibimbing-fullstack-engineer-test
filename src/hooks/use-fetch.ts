@@ -1,9 +1,22 @@
 import { axios } from "@/lib/utils/axios-config";
 import {
+  CONDITION,
+  DEVELOPMENT_URL,
+  PRODUCTION_URL,
+} from "@/lib/utils/constants";
+import { GetAllNotesSchema } from "@/lib/utils/graphql";
+import {
   UseQueryResult,
   keepPreviousData,
   useQuery,
 } from "@tanstack/react-query";
+import { GraphQLClient } from "graphql-request";
+
+export const graphQLClient = new GraphQLClient(
+  `${
+    CONDITION === "development" ? DEVELOPMENT_URL : PRODUCTION_URL
+  }/api/graphql`
+);
 
 export async function getData<T>(url: string): Promise<T> {
   try {
@@ -26,7 +39,7 @@ export async function getData<T>(url: string): Promise<T> {
 export function useFetch(link: string): UseQueryResult<any, Error> {
   return useQuery({
     queryKey: [link],
-    queryFn: () => getData(link),
+    queryFn: async () => await graphQLClient.request(GetAllNotesSchema),
     /**
      * @see https://tanstack.com/query/v5/docs/react/guides/migrating-to-v5#removed-keeppreviousdata-in-favor-of-placeholderdata-identity-function
      */

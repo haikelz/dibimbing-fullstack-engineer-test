@@ -1,7 +1,10 @@
+import { Box, Container } from "@chakra-ui/react";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import Providers from "./providers";
-import { Box, Container } from "@chakra-ui/react";
+
+const ToggleDarkMode = dynamic(() => import("@/components/toggle-dark-mode"));
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,12 +23,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
+          <ToggleDarkMode />
           <Box width="100%" padding={4}>
             <Container
               display="flex"
               justifyContent="center"
               alignItems="center"
               flexDir="column"
+              maxW="5xl"
             >
               {children}
             </Container>
