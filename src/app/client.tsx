@@ -21,6 +21,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { useAtom } from "jotai";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 export default function HomepageClient() {
@@ -152,6 +153,7 @@ export default function HomepageClient() {
                     Edit
                   </Button>
                   <Button onClick={() => handleDelete(item.id)}>Delete</Button>
+                  <Link href={`/notes/${item.id}`}>Detail</Link>
                 </Card>
               ))
             : null}
