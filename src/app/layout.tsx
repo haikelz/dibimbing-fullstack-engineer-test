@@ -8,10 +8,32 @@ const ToggleDarkMode = dynamic(() => import("@/components/toggle-dark-mode"));
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
+const baseMetadata = {
   title: "Noted",
   description:
     "Transform Your Ideas Into Action – Your Ultimate Note-Taking Solution",
+  url: "https://dibimbing-fullstack-engineer-test.vercel.app",
+};
+
+const { title, description, url } = baseMetadata;
+
+export const metadata: Metadata = {
+  title,
+  description,
+  openGraph: {
+    type: "website",
+    url,
+    title,
+    description,
+    siteName: "dibimbing-fullstack-engineer-test.vercel.app",
+  },
+  twitter: {
+    title,
+    description,
+    site: url,
+    card: "summary_large_image",
+  },
+  metadataBase: new URL(url),
 };
 
 export default function RootLayout({

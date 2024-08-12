@@ -1,4 +1,3 @@
-import { axios } from "@/lib/utils/axios-config";
 import {
   CONDITION,
   DEVELOPMENT_URL,
@@ -6,9 +5,11 @@ import {
 } from "@/lib/utils/constants";
 import { GetAllNotesSchema, GetNoteSchema } from "@/lib/utils/graphql";
 import { NoteProps } from "@/types";
-import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import axios from "axios";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import { Metadata } from "next";
 import Link from "next/link";
 
 type GetAllNotesProps = {
@@ -17,26 +18,21 @@ type GetAllNotesProps = {
   };
 };
 
-export async function generateStaticParams(): Promise<{ id: string }[]> {
+/*export async function generateStaticParams() {
   const response: { data: GetAllNotesProps } = await axios.post(
     `${
       CONDITION === "development" ? DEVELOPMENT_URL : PRODUCTION_URL
     }/api/graphql`,
     {
       query: GetAllNotesSchema,
-    }
+    },
+    { headers: { "Content-Type": "application/json" } }
   );
 
   return response.data.data.getAllNotes.map((item) => ({
     id: item.id.toString(),
   }));
-}
-
-type GetDetailNoteProps = {
-  data: {
-    getNote: NoteProps;
-  };
-};
+}*/
 
 async function getDetailNote(id: string): Promise<NoteProps> {
   const response: { data: GetDetailNoteProps } = await axios.post(
@@ -45,11 +41,49 @@ async function getDetailNote(id: string): Promise<NoteProps> {
     }/api/graphql`,
     {
       query: GetNoteSchema(id),
-    }
+    },
+    { headers: { "Content-Type": "application/json" } }
   );
 
   return response.data.data.getNote;
 }
+
+/*export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata | undefined> {
+  const { id } = params;
+
+  const response = await getDetailNote(id);
+  const { title, body, createdAt } = response;
+
+  return {
+    title,
+    description: body,
+    openGraph: {
+      type: "article",
+      url: `${PRODUCTION_URL}/notes/${id}`,
+      title,
+      description: body,
+      publishedTime: createdAt,
+      siteName: PRODUCTION_URL.replace("https://", ""),
+    },
+    twitter: {
+      title,
+      description: body,
+      site: `${PRODUCTION_URL}/notes/${id}`,
+      card: "summary_large_image",
+    },
+    metadataBase: new URL(`${PRODUCTION_URL}/notes/${id}`),
+  };
+}*/
+
+type GetDetailNoteProps = {
+  data: {
+    getNote: NoteProps;
+  };
+};
 
 export default async function DetailNotePage({
   params,
