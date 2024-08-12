@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <ToggleDarkMode />
-          <Box width="100%" padding={4}>
+          <Box width="100%" p={4}>
             <Container
               display="flex"
               justifyContent="center"

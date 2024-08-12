@@ -14,8 +14,7 @@ import {
   DeleteNoteSchema,
   EditNoteSchema,
 } from "@/lib/utils/graphql";
-import { formNoteSchema } from "@/lib/utils/schemas";
-import { editedNoteAtom } from "@/store";
+import { formNoteSchema } from "@/lib/utils/zod";
 import { NoteProps } from "@/types";
 import {
   Box,
@@ -36,14 +35,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import { useAtom } from "jotai";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function HomepageClient() {
-  const [editedNote, setEditedNote] = useAtom(editedNoteAtom);
+  const [editedNote, setEditedNote] = useState<{
+    id: number;
+    status: boolean;
+  } | null>(null);
 
-  const toast = useToast({
+  const TOAST = useToast({
     duration: 5000,
     isClosable: true,
     position: "top-right",
@@ -57,6 +59,7 @@ export default function HomepageClient() {
     getValues,
     handleSubmit,
     setValue,
+    watch,
   } = useForm({
     defaultValues: {
       title: "",
@@ -86,10 +89,12 @@ export default function HomepageClient() {
     if (editedNote?.status) {
       editNoteMutation.mutateAsync().then(() => {
         refetch();
+
         setEditedNote(null);
         setValue("title", "");
         setValue("body", "");
-        toast({
+
+        TOAST({
           title: "Success!",
           description: "Catatan berhasil diedit",
           status: "success",
@@ -98,9 +103,11 @@ export default function HomepageClient() {
     } else {
       addNoteMutation.mutateAsync().then(() => {
         refetch();
+
         setValue("title", "");
         setValue("body", "");
-        toast({
+
+        TOAST({
           title: "Success!",
           description: "Catatan berhasil ditambahkan",
           status: "success",
@@ -121,10 +128,12 @@ export default function HomepageClient() {
   function handleDelete(id: number) {
     deleteNoteMutation.mutateAsync(id.toString()).then(() => {
       refetch();
+
       setEditedNote(null);
       setValue("body", "");
       setValue("title", "");
-      toast({
+
+      TOAST({
         title: "Success!",
         description: "Catatan berhasil dihapus",
         status: "success",
@@ -159,112 +168,139 @@ export default function HomepageClient() {
   const note = data.getAllNotes as NoteProps[];
 
   return (
-    <>
-      <Stack width="100%">
-        <Box width="100%" mt={6}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Flex
-              justifyContent="center"
-              alignItems="center"
-              flexDir="column"
-              flex={1}
-              width="100%"
-            >
-              <Box width="100%">
-                <Input
-                  type="text"
-                  placeholder="Judul...."
-                  {...register("title", { required: true })}
-                />
-                <Text textAlign="left" mt={2}>
-                  {errors.title ? errors.title.message : ""}
-                </Text>
-              </Box>
-              <Box width="100%">
-                <Textarea
-                  mt={5}
-                  placeholder="Catatan...."
-                  {...register("body", { required: true })}
-                  height={200}
-                />
-                <Text mt={2}>{errors.body ? errors.body.message : ""}</Text>
-              </Box>
-              <Button type="submit" mt={5}>
-                {editedNote?.status ? "Edit Catatan" : "Tambah Catatan"}
-              </Button>
-            </Flex>
-          </form>
-          <Box width="100%" mt={10}>
-            <Heading as="h2" size="md">
-              Daftar Catatan
-            </Heading>
+    <Stack width="100%">
+      <Box width="100%" mt={6}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Flex
+            justifyContent="center"
+            alignItems="center"
+            flexDir="column"
+            flex={1}
+            width="100%"
+          >
+            <Box width="100%">
+              <Input
+                type="text"
+                placeholder="Judul...."
+                {...register("title", { required: true })}
+              />
+              <Text textAlign="left" mt={2}>
+                {errors.title ? errors.title.message : ""}
+              </Text>
+            </Box>
+            <Box width="100%">
+              <Textarea
+                mt={5}
+                placeholder="Catatan...."
+                {...register("body", { required: true })}
+                height={200}
+              />
+              <Text mt={2}>{errors.body ? errors.body.message : ""}</Text>
+            </Box>
+            <Button type="submit" mt={5}>
+              {editedNote?.status ? "Edit Catatan" : "Tambah Catatan"}
+            </Button>
+          </Flex>
+        </form>
+        <Box width="100%" mt={10}>
+          <Heading as="h2" size="md">
+            Daftar Catatan
+          </Heading>
+          {note.length ? (
             <SimpleGrid
               gap={6}
               gridTemplateRows="repeat(1, minmax(0, 1fr))"
-              gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+              gridTemplateColumns={{
+                base: "repeat(1, minmax(0, 1fr))",
+                md: "repeat(2, minmax(0, 1fr))",
+                lg: "repeat(3, minmax(0, 1fr))",
+              }}
               width="100%"
               mt={3}
             >
-              {note.length ? (
-                note.map((item) => (
-                  <Card key={item.id} width="100%" padding={3}>
-                    <VStack height="100%" spacing="20px" width="100%">
-                      <Box width="100%" textAlign="right">
-                        <p>
-                          {format(new Date(), "d MMMM y", {
-                            locale: id,
-                          })}
-                        </p>
-                      </Box>
-                      <Box width="100%">
-                        <Link href={`/notes/${item.id}`}>
-                          <Heading size="md">{item.title}</Heading>
-                          <Text
-                            whiteSpace="pre-line"
-                            noOfLines={3}
-                            textAlign="justify"
-                            mt={2}
-                          >
-                            {item.body}
-                          </Text>
-                        </Link>
-                      </Box>
-                      <HStack spacing="15px" width="100%">
-                        <Button
-                          aria-label="edit"
-                          onClick={() =>
-                            handleEdit(item.id, item.title, item.body)
-                          }
-                          width="100%"
+              {note.map((item) => (
+                <Card key={item.id} width="100%" padding={3}>
+                  <VStack height="100%" spacing="20px" width="100%">
+                    <Box width="100%" textAlign="right">
+                      <Text fontWeight="semibold">
+                        {format(item.createdAt, "d MMMM y", {
+                          locale: id,
+                        })}
+                      </Text>
+                    </Box>
+                    <Box
+                      width="100%"
+                      role="group"
+                      transitionProperty="all"
+                      transitionTimingFunction="cubic-bezier(0.4, 0, 0.2, 1)"
+                      transitionDuration="150ms"
+                    >
+                      <Link href={`/notes/${item.id}`}>
+                        <Heading
+                          size="md"
+                          _groupHover={{
+                            textColor: "pink.500",
+                            transitionProperty: "all",
+                            transitionTimingFunction:
+                              "cubic-bezier(0.4, 0, 0.2, 1)",
+                            transitionDuration: "150ms",
+                          }}
                         >
-                          Edit
-                        </Button>
-                        <Button
-                          aria-label="delete"
-                          colorScheme="red"
-                          onClick={() => handleDelete(item.id)}
-                          width="100%"
+                          {item.title}
+                        </Heading>
+                        <Text
+                          whiteSpace="pre-line"
+                          noOfLines={3}
+                          textAlign="justify"
+                          mt={2}
+                          _groupHover={{
+                            textColor: "pink.500",
+                            transitionProperty: "all",
+                            transitionTimingFunction:
+                              "cubic-bezier(0.4, 0, 0.2, 1)",
+                            transitionDuration: "150ms",
+                          }}
                         >
-                          Delete
-                        </Button>
-                      </HStack>
-                    </VStack>
-                  </Card>
-                ))
-              ) : (
-                <Text
-                  mt={4}
-                  textDecoration="underline"
-                  fontWeight="semibold"
-                  textUnderlineOffset={4}
-                >
-                  Tidak ada catatan!
-                </Text>
-              )}
+                          {item.body}
+                        </Text>
+                      </Link>
+                    </Box>
+                    <HStack spacing="15px" width="100%">
+                      <Button
+                        aria-label="edit"
+                        onClick={() =>
+                          handleEdit(item.id, item.title, item.body)
+                        }
+                        width="100%"
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        aria-label="delete"
+                        colorScheme="red"
+                        onClick={() => handleDelete(item.id)}
+                        width="100%"
+                      >
+                        Delete
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </Card>
+              ))}
             </SimpleGrid>
-          </Box>
+          ) : (
+            <Text
+              mt={4}
+              textDecoration="underline"
+              fontWeight="semibold"
+              textUnderlineOffset={4}
+              textAlign="center"
+            >
+              Tidak ada catatan!
+            </Text>
+          )}
         </Box>
-      </Stack>
-    </>
+      </Box>
+    </Stack>
   );
 }

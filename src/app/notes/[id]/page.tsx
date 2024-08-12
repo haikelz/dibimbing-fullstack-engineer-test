@@ -1,32 +1,54 @@
-import { getData } from "@/hooks/use-fetch";
+import { axios } from "@/lib/utils/axios-config";
 import {
   CONDITION,
   DEVELOPMENT_URL,
   PRODUCTION_URL,
 } from "@/lib/utils/constants";
+import { GetAllNotesSchema, GetNoteSchema } from "@/lib/utils/graphql";
 import { NoteProps } from "@/types";
-import { Heading, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
+import Link from "next/link";
+
+type GetAllNotesProps = {
+  data: {
+    getAllNotes: NoteProps[];
+  };
+};
 
 export async function generateStaticParams(): Promise<{ id: string }[]> {
-  const response: { result: { rows: NoteProps[] } } = await getData(
+  const response: { data: GetAllNotesProps } = await axios.post(
     `${
       CONDITION === "development" ? DEVELOPMENT_URL : PRODUCTION_URL
-    }/api/notes`
+    }/api/graphql`,
+    {
+      query: GetAllNotesSchema,
+    }
   );
 
-  return response.result.rows.map((item) => ({
+  return response.data.data.getAllNotes.map((item) => ({
     id: item.id.toString(),
   }));
 }
 
+type GetDetailNoteProps = {
+  data: {
+    getNote: NoteProps;
+  };
+};
+
 async function getDetailNote(id: string): Promise<NoteProps> {
-  const response: { result: { rows: NoteProps[] } } = await getData(
+  const response: { data: GetDetailNoteProps } = await axios.post(
     `${
       CONDITION === "development" ? DEVELOPMENT_URL : PRODUCTION_URL
-    }/api/notes/${id}`
+    }/api/graphql`,
+    {
+      query: GetNoteSchema(id),
+    }
   );
 
-  return response.result.rows[0];
+  return response.data.data.getNote;
 }
 
 export default async function DetailNotePage({
@@ -37,12 +59,21 @@ export default async function DetailNotePage({
   const detailNote = (await getDetailNote(params.id)) as NoteProps;
 
   return (
-    <Stack>
-      <Heading>{detailNote.title}</Heading>
-      <Text whiteSpace="pre-line" textAlign="justify">
+    <Stack width="100%">
+      <Flex justifyContent="space-between" width="100%" alignItems="center">
+        <Link href="/">
+          <Button>Back</Button>
+        </Link>
+        <Text fontWeight="semibold" textAlign="right">
+          {format(detailNote.createdAt, "d MMMM y", {
+            locale: id,
+          })}
+        </Text>
+      </Flex>
+      <Heading mt={6}>{detailNote.title}</Heading>
+      <Text whiteSpace="pre-line" textAlign="justify" mt={4}>
         {detailNote.body}
       </Text>
-      <Stack></Stack>
     </Stack>
   );
 }

@@ -1,8 +1,7 @@
 import { typeDefs } from "@/lib/utils/graphql";
-import { useResponseCache } from "@graphql-yoga/plugin-response-cache";
+import { useCSRFPrevention as CSRFPrevention } from "@graphql-yoga/plugin-csrf-prevention";
 import { sql } from "@vercel/postgres";
 import { createSchema, createYoga } from "graphql-yoga";
-import { useCSRFPrevention } from "@graphql-yoga/plugin-csrf-prevention";
 
 const { handleRequest } = createYoga({
   graphqlEndpoint: "/api/graphql",
@@ -14,13 +13,13 @@ const { handleRequest } = createYoga({
           const result = await sql`SELECT * FROM notes;`;
           return result.rows;
         },
-        getNote: async (parent, args) => {
+        getNote: async (_, args) => {
           const result = await sql`SELECT * FROM notes WHERE id = ${args.id}`;
           return result.rows[0];
         },
       },
       Mutation: {
-        addNote: async (parent, args) => {
+        addNote: async (_, args) => {
           const { title, body } = args;
           await sql`INSERT INTO notes(title, body) VALUES(${title}, ${body});`;
 
@@ -29,7 +28,7 @@ const { handleRequest } = createYoga({
             message: "Success create note!",
           };
         },
-        editNote: async (parent, args) => {
+        editNote: async (_, args) => {
           const { id, title, body } = args;
           await sql`UPDATE notes SET title = ${title}, body = ${body} WHERE id = ${id}`;
 
@@ -38,7 +37,7 @@ const { handleRequest } = createYoga({
             message: "Success update note!",
           };
         },
-        deleteNote: async (parent, args) => {
+        deleteNote: async (_, args) => {
           const { id } = args;
           await sql`DELETE FROM notes WHERE id = ${id}`;
 
@@ -55,8 +54,11 @@ const { handleRequest } = createYoga({
     Request: Request,
   },
   plugins: [
-    useCSRFPrevention({
-      requestHeaders: ["x-graphql-yoga-csrf"], // default
+    /**
+     * @see https://the-guild.dev/graphql/yoga-server/docs/features/csrf-prevention
+     */
+    CSRFPrevention({
+      requestHeaders: ["x-graphql-yoga-csrf"],
     }),
   ],
   batching: true,

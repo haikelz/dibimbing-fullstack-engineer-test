@@ -1,11 +1,13 @@
 import { gql } from "graphql-request";
 
 export const typeDefs = `
+  scalar Date
+
   type Note {
     id: ID!
     title: String!
     body: String!
-    created_at: String!
+    createdAt: Date!
   }
 
   type MutationResponse {
@@ -31,14 +33,25 @@ export const GetAllNotesSchema = gql`
       id
       title
       body
-      created_at
+      createdAt
+    }
+  }
+`;
+
+export const GetNoteSchema = (id: string) => gql`
+  query {
+    getNote(id: "${id}") {
+      id
+      title
+      body
+      createdAt
     }
   }
 `;
 
 export const AddNoteSchema = (title: string, body: string) => gql`
   mutation {
-    addNote(title: "${title}", body: "${body}") {
+    addNote(title: "${title}", body: """${body}""") {
       statusCode
       message
     }
@@ -47,7 +60,7 @@ export const AddNoteSchema = (title: string, body: string) => gql`
 
 export const EditNoteSchema = (id: string, title: string, body: string) => gql`
   mutation {
-    editNote(id: "${id}", title: "${title}", body: "${body}") {
+    editNote(id: "${id}", title: "${title}", body: """${body}""") {
       statusCode
       message     
     }

@@ -7,7 +7,7 @@ export default function ToggleDarkMode() {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Box position="fixed" right={4} top={4}>
+    <Box position="fixed" right={4} bottom={4}>
       <IconButton
         aria-label="toggle dark mode"
         onClick={toggleColorMode}

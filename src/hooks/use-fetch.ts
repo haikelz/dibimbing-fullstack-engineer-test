@@ -1,4 +1,3 @@
-import { axios } from "@/lib/utils/axios-config";
 import {
   CONDITION,
   DEVELOPMENT_URL,
@@ -17,18 +16,6 @@ export const graphQLClient = new GraphQLClient(
     CONDITION === "development" ? DEVELOPMENT_URL : PRODUCTION_URL
   }/api/graphql`
 );
-
-export async function getData<T>(url: string): Promise<T> {
-  try {
-    const response = await axios.get(url, {
-      method: "GET",
-    });
-
-    return response.data;
-  } catch (err) {
-    throw new Error("Failed to fetch data!");
-  }
-}
 
 /**
  * A reusable useQuery with additional configuration

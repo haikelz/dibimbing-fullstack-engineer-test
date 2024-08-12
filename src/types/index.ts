@@ -8,5 +8,5 @@ export type NoteProps = {
   id: number;
   title: string;
   body: string;
-  created_at: string;
+  createdAt: string;
 };
