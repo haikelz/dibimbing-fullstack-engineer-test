@@ -18,7 +18,7 @@ type GetAllNotesProps = {
   };
 };
 
-/*export async function generateStaticParams() {
+export async function generateStaticParams() {
   const response: { data: GetAllNotesProps } = await axios.post(
     `${
       CONDITION === "development" ? DEVELOPMENT_URL : PRODUCTION_URL
@@ -32,7 +32,7 @@ type GetAllNotesProps = {
   return response.data.data.getAllNotes.map((item) => ({
     id: item.id.toString(),
   }));
-}*/
+}
 
 async function getDetailNote(id: string): Promise<NoteProps> {
   const response: { data: GetDetailNoteProps } = await axios.post(
@@ -48,7 +48,7 @@ async function getDetailNote(id: string): Promise<NoteProps> {
   return response.data.data.getNote;
 }
 
-/*export async function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { id: string };
@@ -77,7 +77,7 @@ async function getDetailNote(id: string): Promise<NoteProps> {
     },
     metadataBase: new URL(`${PRODUCTION_URL}/notes/${id}`),
   };
-}*/
+}
 
 type GetDetailNoteProps = {
   data: {
