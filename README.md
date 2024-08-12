@@ -8,7 +8,6 @@
 - Next JS
 - Typescript
 - Chakra UI
-- Framer Motion
 - React Query
 - Vercel Postgres
 - GraphQL (using GraphQL Yoga)
