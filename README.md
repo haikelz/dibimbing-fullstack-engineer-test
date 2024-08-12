@@ -15,14 +15,15 @@
 
 ## Screenshots
 
-|                                                                     |                                                                      |
-| :-----------------------------------------------------------------: | :------------------------------------------------------------------: |
-| ![ss 1](/public/docs/Screenshot%20from%202024-08-12%2011-37-21.png) | ![ss 2](/public/docs/Screenshot%20from%202024-08-12%2011-40-07.png)  |
-| ![ss 3](/public/docs/Screenshot%20from%202024-08-12%2011-40-14.png) | ![ss 4](/public/docs/Screenshot%20from%202024-08-12%2011-40-22.png)  |
-| ![ss 5](/public/docs/Screenshot%20from%202024-08-12%2011-41-56.png) | ![ss 6](/public/docs/Screenshot%20from%202024-08-12%2011-42-03.png)  |
-| ![ss 7](/public/docs/Screenshot%20from%202024-08-12%2011-47-08.png) | ![ss 8](/public/docs/Screenshot%20from%202024-08-12%2011-47-23.png)  |
-| ![ss 9](/public/docs/Screenshot%20from%202024-08-12%2011-54-10.png) | ![ss 10](/public/docs/Screenshot%20from%202024-08-12%2014-54-02.png) |
-|                                                                     |                                                                      |
+|                                                                      |                                                                      |
+| :------------------------------------------------------------------: | :------------------------------------------------------------------: |
+| ![ss 1](/public/docs/Screenshot%20from%202024-08-12%2011-37-21.png)  | ![ss 2](/public/docs/Screenshot%20from%202024-08-12%2011-40-07.png)  |
+| ![ss 3](/public/docs/Screenshot%20from%202024-08-12%2011-40-14.png)  | ![ss 4](/public/docs/Screenshot%20from%202024-08-12%2011-40-22.png)  |
+| ![ss 5](/public/docs/Screenshot%20from%202024-08-12%2011-41-56.png)  | ![ss 6](/public/docs/Screenshot%20from%202024-08-12%2011-42-03.png)  |
+| ![ss 7](/public/docs/Screenshot%20from%202024-08-12%2011-47-08.png)  | ![ss 8](/public/docs/Screenshot%20from%202024-08-12%2011-47-23.png)  |
+| ![ss 9](/public/docs/Screenshot%20from%202024-08-12%2011-54-10.png)  | ![ss 10](/public/docs/Screenshot%20from%202024-08-12%2014-54-02.png) |
+| ![ss 11](/public/docs/Screenshot%20from%202024-08-12%2021-18-09.png) | ![ss 12](/public/docs/Screenshot%20from%202024-08-12%2022-54-52.png) |
+|                                                                      |                                                                      |
 
 ## Link
 
