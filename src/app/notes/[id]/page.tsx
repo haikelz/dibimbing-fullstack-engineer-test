@@ -1,15 +1,5 @@
-import {
-  CONDITION,
-  DEVELOPMENT_URL,
-  PRODUCTION_URL,
-} from "@/lib/utils/constants";
-import { GetAllNotesSchema, GetNoteSchema } from "@/lib/utils/graphql";
 import { NoteProps } from "@/types";
-import { Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
-import axios from "axios";
-import { format } from "date-fns";
-import { id } from "date-fns/locale";
-import { Metadata } from "next";
+import { Button, Flex, Stack } from "@chakra-ui/react";
 import Link from "next/link";
 
 type GetAllNotesProps = {
@@ -18,6 +8,7 @@ type GetAllNotesProps = {
   };
 };
 
+/*
 export async function generateStaticParams() {
   const response: { data: GetAllNotesProps } = await axios.post(
     `${
@@ -46,8 +37,9 @@ async function getDetailNote(id: string): Promise<NoteProps> {
   );
 
   return response.data.data.getNote;
-}
+}*/
 
+/*
 export async function generateMetadata({
   params,
 }: {
@@ -83,14 +75,14 @@ type GetDetailNoteProps = {
   data: {
     getNote: NoteProps;
   };
-};
+};*/
 
 export default async function DetailNotePage({
   params,
 }: {
   params: { id: string };
 }) {
-  const detailNote = (await getDetailNote(params.id)) as NoteProps;
+  // const detailNote = (await getDetailNote(params.id)) as NoteProps;
 
   return (
     <Stack width="100%">
@@ -98,16 +90,16 @@ export default async function DetailNotePage({
         <Link href="/">
           <Button>Back</Button>
         </Link>
-        <Text fontWeight="semibold" textAlign="right">
+        {/*<Text fontWeight="semibold" textAlign="right">
           {format(detailNote.createdAt, "d MMMM y", {
             locale: id,
           })}
-        </Text>
+        </Text>*/}
       </Flex>
-      <Heading mt={6}>{detailNote.title}</Heading>
+      {/*<Heading mt={6}>{detailNote.title}</Heading>
       <Text whiteSpace="pre-line" textAlign="justify" mt={4}>
         {detailNote.body}
-      </Text>
+      </Text>*/}
     </Stack>
   );
 }
