@@ -59,7 +59,6 @@ export default function HomepageClient() {
     getValues,
     handleSubmit,
     setValue,
-    watch,
   } = useForm({
     defaultValues: {
       title: "",

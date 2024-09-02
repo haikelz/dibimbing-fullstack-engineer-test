@@ -1,6 +1,6 @@
 import { typeDefs } from "@/lib/utils/graphql";
+import { prisma } from "@/lib/utils/prisma";
 import { useCSRFPrevention as CSRFPrevention } from "@graphql-yoga/plugin-csrf-prevention";
-import { sql } from "@vercel/postgres";
 import { createSchema, createYoga } from "graphql-yoga";
 
 const { handleRequest } = createYoga({
@@ -10,18 +10,27 @@ const { handleRequest } = createYoga({
     resolvers: {
       Query: {
         getAllNotes: async () => {
-          const result = await sql`SELECT * FROM notes;`;
-          return result.rows;
+          const result = await prisma.notes.findMany();
+          return result;
         },
         getNote: async (_, args) => {
-          const result = await sql`SELECT * FROM notes WHERE id = ${args.id}`;
-          return result.rows[0];
+          const result = await prisma.notes.findUnique({
+            where: {
+              id: Number(args.id),
+            },
+          });
+          return result;
         },
       },
       Mutation: {
         addNote: async (_, args) => {
           const { title, body } = args;
-          await sql`INSERT INTO notes(title, body) VALUES(${title}, ${body});`;
+          await prisma.notes.create({
+            data: {
+              title,
+              body,
+            },
+          });
 
           return {
             statusCode: 200,
@@ -30,7 +39,15 @@ const { handleRequest } = createYoga({
         },
         editNote: async (_, args) => {
           const { id, title, body } = args;
-          await sql`UPDATE notes SET title = ${title}, body = ${body} WHERE id = ${id}`;
+          await prisma.notes.update({
+            data: {
+              title,
+              body,
+            },
+            where: {
+              id: Number(id),
+            },
+          });
 
           return {
             statusCode: 200,
@@ -39,7 +56,11 @@ const { handleRequest } = createYoga({
         },
         deleteNote: async (_, args) => {
           const { id } = args;
-          await sql`DELETE FROM notes WHERE id = ${id}`;
+          await prisma.notes.delete({
+            where: {
+              id: Number(id),
+            },
+          });
 
           return {
             statusCode: 200,
